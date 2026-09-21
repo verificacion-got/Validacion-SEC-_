@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificado SEC - Detalle</title>
+    
+    <!-- Librería necesaria para editar el PDF antes de descargarlo -->
+    <script src="https://unpkg.com/pdf-lib/dist/pdf-lib.min.js"></script>
+    
+    <style>
+        /* RESET Y FUENTES */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; background-color: #ffffff; color: #333; display: flex; flex-direction: column; min-height: 100vh; }
+        .navbar { background-color: #003057; height: 60px; width: 100%; display: flex; align-items: center; padding-left: 15px; border-bottom: 4px solid #fbb900; }
+        .navbar-logo { color: white; font-weight: 800; font-size: 28px; letter-spacing: -1px; }
+        .container { width: 100%; max-width: 500px; margin: 0 auto; padding: 20px 20px 40px 20px; flex: 1; }
+        .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
+        .logos-gob { display: flex; align-items: center; }
+        .logo-min { height: auto; max-height: 60px; max-width: 180px; }
+        .status-badge { background-color: #337ab7; color: white; padding: 8px 15px; border-radius: 4px; font-weight: bold; font-size: 14px; text-transform: uppercase; margin-top: 5px; }
+        h1 { color: #455a64; font-size: 24px; font-weight: 400; line-height: 1.2; margin-bottom: 20px; }
+        .clase-title { font-size: 26px; color: #337ab7; margin-bottom: 30px; }
+        .clase-title span { font-weight: bold; }
+        .info-group { margin-bottom: 25px; }
+        .label { display: block; color: #78909c; font-size: 14px; margin-bottom: 5px; }
+        .value { display: block; color: #37474f; font-size: 20px; font-weight: 700; }
+        .value-large { font-size: 22px; color: #263238; }
+        .date-value { color: #455a64; font-size: 22px; font-weight: 700; margin-top: 5px; }
+        .issued-text { color: #607d8b; font-size: 16px; margin-top: 30px; margin-bottom: 15px; }
+        .valid-text { font-size: 16px; color: #607d8b; }
+        .valid-text strong { color: #37474f; font-size: 18px; }
+        .btn-download { display: block; width: 100%; background-color: #003057; color: #ffffff; text-align: center; text-decoration: none; padding: 15px; margin-top: 30px; border-radius: 5px; font-size: 18px; font-weight: bold; border: none; border-bottom: 3px solid #fbb900; cursor: pointer; transition: background-color 0.2s ease; }
+        .btn-download:hover { background-color: #00457a; }
+        .btn-download:disabled { background-color: #78909c; cursor: not-allowed; border-bottom: 3px solid #546e7a; }
+        footer { background-color: #003057; color: white; padding: 20px; font-size: 14px; }
+        .footer-logo { font-size: 30px; font-weight: 800; margin-bottom: 10px; display: block; letter-spacing: -2px; }
+        .contact-item { display: flex; align-items: center; margin-bottom: 12px; font-size: 15px; }
+        .icon { margin-right: 10px; font-size: 18px; width: 25px; text-align: center; border: 1px solid white; border-radius: 50%; height: 25px; line-height: 23px; display: inline-block; }
+        .icon-mouse { border: none; font-size: 20px; }
+        .institution-title { text-transform: uppercase; font-weight: 700; color: #37474f; font-size: 20px; line-height: 1.3; }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="navbar-logo">SEC</div>
+    </nav>
+
+    <div class="container">
+        <div class="card-header">
+            <div class="logos-gob">
+                <img src="sec.jpg" alt="Logos Gobierno y SEC" class="logo-min">
+            </div>
+            <div class="status-badge">ACTIVO</div>
+        </div>
+
+        <h1>Certificado de<br>INSTALADOR ELECTRICO</h1>
+        <div class="clase-title">Clase <span>A</span></div>
+        <div class="info-group"><span class="label">Rut</span><span class="value">20.641.469-3</span></div>
+        <div class="info-group"><span class="label">Nombre</span><span class="value-large">NICOLÁS ARIEL MORAGA SILVA</span></div>
+        <div class="info-group"><span class="label">Carrera / Certificación /<br>Especialidad</span><span class="value-large"><br>TÉCNICO SUPERIOR ELÉCTRICO</span></div>
+        <div class="info-group" style="margin-top: 40px;"><span class="label">Institución</span><div class="institution-title"><br>INSTITUTO UCSC</div></div>
+        <div class="info-group"><span class="label">Fecha de inicio licencia en la clase</span><div class="date-value">21/09/2026</div></div>
+        <div class="info-group"><span class="label"></span><div class="date-value"></div></div>
+
+        <!-- DIV DONDE SE MUESTRA LA FECHA ACTUAL EN PANTALLA -->
+        <div class="issued-text" id="fecha-emision"></div>
+
+        <!-- DIV DONDE SE MUESTRA LA FECHA DE VALIDEZ -->
+        <div class="valid-text">Válido hasta el <strong id="fecha-validez"></strong></div>
+
+        <!-- BOTÓN DE DESCARGA CON JAVASCRIPT -->
+        <button id="btn-descargar" class="btn-download" onclick="generarYDescargarPDF()">
+            Descargar Certificado (PDF)
+        </button>
+    </div>
+
+    <footer>
+        <div class="footer-logo">SEC</div>
+        <div class="contact-item"><span class="icon">📞</span><span>600 6000 732</span></div>
+        <div class="contact-item"><span class="icon icon-mouse">🖱️</span><span>www.sec.cl</span></div>
+        <div class="contact-item"><span class="icon icon-mouse">🐦</span><span>@SEC_cl</span></div>
+    </footer>
+
+    <!-- SCRIPT DE AUTOMATIZACIÓN DE FECHAS (WEB Y PDF) -->
+    <script>
+        // 1. OBTENER LA FECHA ACTUAL (EMISIÓN)
+        const hoy = new Date();
+        const dia = String(hoy.getDate()).padStart(2, '0');
+        const mes = String(hoy.getMonth() + 1).padStart(2, '0');
+        const anio = hoy.getFullYear();
+        const fechaFormateada = `${dia}/${mes}/${anio}`;
+        document.getElementById('fecha-emision').innerHTML = `Emitido el ${fechaFormateada}`;
+
+        // 2. CALCULAR LA FECHA DE VALIDEZ (+90 DÍAS)
+        const fechaValidez = new Date(hoy); 
+        fechaValidez.setDate(fechaValidez.getDate() + 90); 
+        
+        const diaVal = String(fechaValidez.getDate()).padStart(2, '0');
+        const mesVal = String(fechaValidez.getMonth() + 1).padStart(2, '0');
+        const anioVal = fechaValidez.getFullYear();
+        const fechaValidezFormateada = `${diaVal}/${mesVal}/${anioVal}`;
+        document.getElementById('fecha-validez').innerText = fechaValidezFormateada;
+
+        // 3. FUNCIÓN PARA ESCRIBIR LA FECHA EN EL PDF Y DESCARGARLO
+        async function generarYDescargarPDF() {
+            const btn = document.getElementById('btn-descargar');
+            btn.innerText = "Generando documento...";
+            btn.disabled = true;
+
+            try {
+                // Cargar el PDF original con el nombre correcto
+                const urlPDF = 'SecNicolasMoraga.pdf'; 
+                const respuesta = await fetch(urlPDF);
+                if (!respuesta.ok) throw new Error("No se pudo encontrar el archivo SecNicolasMoraga.pdf");
+                const pdfBytesOriginales = await respuesta.arrayBuffer();
+                
+                // Iniciar la modificación del PDF
+                const { PDFDocument, rgb } = PDFLib;
+                const pdfDoc = await PDFDocument.load(pdfBytesOriginales);
+                const paginas = pdfDoc.getPages();
+                const primeraPagina = paginas[0];
+
+                // DIBUJAR RECTÁNGULOS BLANCOS PARA TAPAR LAS FECHAS ANTERIORES
+                // (Coordenadas basadas en la estructura habitual de estos documentos)
+                primeraPagina.drawRectangle({ x: 80, y: 220, width: 160, height: 15, color: rgb(1, 1, 1) }); // Tapa Emisión original
+                primeraPagina.drawRectangle({ x: 380, y: 220, width: 160, height: 15, color: rgb(1, 1, 1) }); // Tapa Validez original
+
+                // ESCRIBIR LA NUEVA FECHA DE EMISIÓN (Lado Izquierdo)
+                primeraPagina.drawText(`Emitido el ${fechaFormateada}`, {
+                    x: 95,      // Mover a Izquierda/Derecha
+                    y: 222,     // Mover Arriba/Abajo
+                    size: 10,   
+                    color: rgb(0, 0, 0)
+                });
+
+                // ESCRIBIR LA NUEVA FECHA DE VALIDEZ (Lado Derecho)
+                primeraPagina.drawText(`Válido hasta el ${fechaValidezFormateada}`, {
+                    x: 390,     // Mover a Izquierda/Derecha
+                    y: 222,     // Mover Arriba/Abajo
+                    size: 10,   
+                    color: rgb(0, 0, 0)
+                });
+
+                // Guardar los cambios
+                const pdfModificado = await pdfDoc.save();
+
+                // Descargar el nuevo PDF con el mismo nombre
+                const blob = new Blob([pdfModificado], { type: 'application/pdf' });
+                const linkDescarga = document.createElement('a');
+                linkDescarga.href = URL.createObjectURL(blob);
+                linkDescarga.download = 'SecNicolasMoraga.pdf'; 
+                
+                document.body.appendChild(linkDescarga);
+                linkDescarga.click();
+                document.body.removeChild(linkDescarga);
+                URL.revokeObjectURL(linkDescarga.href);
+
+            } catch (error) {
+                console.error("Error procesando el PDF:", error);
+                alert("Hubo un error al generar el PDF. Verifica que estás en un servidor web y que el archivo SecNicolasMoraga.pdf existe en la misma carpeta.");
+            } finally {
+                btn.innerText = "Descargar Certificado (PDF)";
+                btn.disabled = false;
+            }
+        }
+    </script>
+</body>
+</html>
